@@ -1,43 +1,615 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Gaming JeNNa Community</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gaming JeNNa | Community Hub</title>
+  <meta name="description" content="Gaming JeNNa official community hub. Videos, podcasts, announcements, and supporters."/>
   <style>
-    body {
-      margin: 0;
-      background: #0f0f12;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
+    :root{
+      --bg:#0b0c10;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.10);
+      --text:#f4f6ff;
+      --muted: rgba(244,246,255,.72);
+      --line: rgba(255,255,255,.12);
+      --accent:#ff2a6d;
+      --accent2:#7a5cff;
+      --radius:18px;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
     }
-    header {
-      padding: 60px 20px;
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue";
+      background: radial-gradient(1200px 800px at 10% 10%, rgba(122,92,255,.18), transparent 60%),
+                  radial-gradient(900px 700px at 90% 20%, rgba(255,42,109,.18), transparent 60%),
+                  radial-gradient(900px 700px at 50% 120%, rgba(0,255,179,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
     }
-    h1 {
-      font-size: 40px;
-      margin-bottom: 10px;
+
+    /* animated grain */
+    .grain{
+      pointer-events:none;
+      position:fixed; inset:-20%;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      opacity:.08;
+      mix-blend-mode:overlay;
+      animation: drift 10s linear infinite;
+      transform:translate3d(0,0,0);
     }
-    p {
-      opacity: 0.7;
+    @keyframes drift{
+      0%{transform:translate3d(0,0,0)}
+      100%{transform:translate3d(-6%, -8%,0)}
     }
-    .btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 25px;
-      background: #ff0055;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
+
+    .wrap{
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 22px 16px 70px;
+    }
+
+    /* top bar */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(11,12,16,.85), rgba(11,12,16,.35));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar-inner{
+      max-width:1080px;
+      margin:0 auto;
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:var(--text);
+    }
+    .logo{
+      width:38px;height:38px;
+      border-radius:12px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,42,109,.9), rgba(122,92,255,.9));
+      box-shadow: 0 10px 30px rgba(122,92,255,.18);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo::after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: conic-gradient(from 180deg, transparent 0 40%, rgba(255,255,255,.18) 55%, transparent 70% 100%);
+      animation: shine 2.8s linear infinite;
+    }
+    @keyframes shine{to{transform:rotate(360deg)}}
+    .brand strong{font-weight:800; letter-spacing:.2px}
+    .brand small{display:block; color:var(--muted); font-weight:600; margin-top:2px}
+
+    .nav{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 999px;
+      text-decoration:none;
+      font-weight:700;
+      font-size: 13px;
+      transition: transform .15s ease, background .2s ease, border-color .2s ease;
+    }
+    .chip:hover{transform: translateY(-1px); background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.18)}
+    .chip.primary{
+      background: linear-gradient(135deg, rgba(255,42,109,.9), rgba(122,92,255,.9));
+      border-color: transparent;
+    }
+
+    /* hero */
+    .hero{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items:stretch;
+    }
+    @media (max-width: 860px){
+      .hero{grid-template-columns:1fr}
+    }
+
+    .card{
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 200px at 20% 0%, rgba(255,42,109,.20), transparent 60%),
+                  radial-gradient(600px 220px at 90% 10%, rgba(122,92,255,.20), transparent 60%);
+      pointer-events:none;
+      filter: blur(2px);
+      opacity:.9;
+    }
+    .card > *{position:relative}
+    .pad{padding: 18px}
+
+    .kicker{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-weight:700;
+      font-size: 13px;
+      width: fit-content;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:99px;
+      background: var(--accent);
+      box-shadow: 0 0 20px rgba(255,42,109,.75);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{transform:scale(1); opacity:.8}
+      50%{transform:scale(1.4); opacity:1}
+    }
+
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 3.6vw, 44px);
+      line-height:1.06;
+      letter-spacing:-.6px;
+    }
+    .lead{
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height:1.55;
+      max-width: 60ch;
+      margin:0;
+    }
+
+    .cta-row{
+      margin-top: 16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      text-decoration:none;
+      font-weight:800;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      transition: transform .15s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.20)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(255,42,109,.95), rgba(122,92,255,.95));
+      border-color: transparent;
+    }
+    .btn .icon{
+      width:18px; height:18px; display:inline-block;
+      opacity:.9;
+    }
+
+    /* right card */
+    .mini{
+      display:grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 12px;
+    }
+    .stat{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .stat strong{font-size:14px}
+    .stat span{color:var(--muted); font-weight:700; font-size:13px}
+
+    .embed{
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      background: rgba(0,0,0,.25);
+      position:relative;
+      min-height: 220px;
+    }
+    .embed iframe{
+      width:100%;
+      height:100%;
+      min-height: 220px;
+      border:0;
+      display:block;
+    }
+    .embed .overlay{
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(11,12,16,.75), transparent 55%);
+      pointer-events:none;
+    }
+    .embed .label{
+      position:absolute; left:12px; bottom:12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.38);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:800;
+      font-size: 13px;
+    }
+
+    /* sections */
+    .grid{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    .col-6{grid-column: span 6;}
+    .col-4{grid-column: span 4;}
+    .col-8{grid-column: span 8;}
+    .col-12{grid-column: span 12;}
+    @media (max-width: 900px){
+      .col-6,.col-4,.col-8{grid-column: span 12;}
+    }
+
+    .section-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:10px;
+      margin: 0 0 8px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing:-.2px;
+    }
+    .section-title p{
+      margin:0;
+      color:var(--muted);
+      font-size: 13px;
+      font-weight:700;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+    .item{
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      transition: transform .15s ease, background .2s ease, border-color .2s ease;
+    }
+    .item:hover{transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18)}
+    .item .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .tag{
+      font-size: 12px;
+      font-weight:800;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .item h3{margin:8px 0 6px; font-size: 15px}
+    .item p{margin:0; color:var(--muted); font-size: 13.5px; line-height:1.45}
+    .item a{
+      color: var(--text);
+      text-decoration:none;
+      font-weight:800;
+    }
+    .item a:hover{text-decoration:underline}
+
+    /* footer */
+    footer{
+      margin-top: 18px;
+      color: rgba(244,246,255,.55);
+      font-size: 13px;
+      text-align:center;
+    }
+
+    /* reveal animation */
+    .reveal{
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      .grain,.logo::after,.dot{animation:none !important}
+      .reveal{transition:none}
+      .btn,.chip,.item{transition:none}
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>Gaming JeNNa 🔥</h1>
-    <p>Official Community Hub</p>
-    <a class="btn" href="https://youtube.com/" target="_blank">Visit YouTube</a>
-  </header>
+  <div class="grain"></div>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <strong>Gaming JeNNa</strong>
+          <small>Community Hub</small>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a class="chip" href="#announcements">Posts</a>
+        <a class="chip" href="#podcast">Podcast</a>
+        <a class="chip" href="#supporters">Supporters</a>
+        <!-- Add your BuyMeACoffee link below -->
+        <a class="chip primary" href="#" id="bmacTop" target="_blank" rel="noopener">Support</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="wrap" id="top">
+    <section class="hero">
+      <div class="card reveal">
+        <div class="pad">
+          <div class="kicker"><span class="dot"></span> Live updates • Videos • Podcast • Community</div>
+          <h1>Welcome to the official<br/>Gaming JeNNa community.</h1>
+          <p class="lead">
+            Watch my latest uploads, listen to podcasts, see announcements, and support the channel.
+            Mobile friendly, simple, and fast.
+          </p>
+
+          <div class="cta-row">
+            <!-- Put your real YouTube channel link here -->
+            <a class="btn primary" id="ytBtn" href="https://youtube.com/" target="_blank" rel="noopener">
+              <span class="icon">▶</span> YouTube Channel
+            </a>
+
+            <!-- Put your playlist / podcast link here -->
+            <a class="btn" id="podBtn" href="#podcast">
+              <span class="icon">🎧</span> Listen to Podcast
+            </a>
+
+            <a class="btn" href="#announcements">
+              <span class="icon">📢</span> Announcements
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mini reveal">
+        <div class="pad">
+          <div class="section-title" style="margin:0;">
+            <h2>Latest Video</h2>
+            <p>auto: you set embed</p>
+          </div>
+        </div>
+
+        <div class="embed" aria-label="Latest video embed">
+          <!-- Replace VIDEO_ID with your YouTube video id -->
+          <iframe id="ytEmbed" src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+          <div class="overlay"></div>
+          <div class="label">Now Playing</div>
+        </div>
+
+        <div class="pad">
+          <div class="stat">
+            <strong>Updates</strong>
+            <span id="updateText">New posts weekly</span>
+          </div>
+          <div style="height:10px"></div>
+          <div class="stat">
+            <strong>Community</strong>
+            <span>Reactions & comments</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card col-8 reveal" id="announcements">
+        <div class="pad">
+          <div class="section-title">
+            <h2>Special Posts & Announcements</h2>
+            <p>simple, clean, fast</p>
+          </div>
+
+          <div class="list" id="postsList">
+            <!-- posts will load here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="card col-4 reveal" id="podcast">
+        <div class="pad">
+          <div class="section-title">
+            <h2>Podcast</h2>
+            <p>listen anytime</p>
+          </div>
+
+          <div class="item">
+            <div class="top">
+              <span class="tag">Featured</span>
+              <a id="podOpen" href="#" target="_blank" rel="noopener">Open</a>
+            </div>
+            <h3 id="podTitle">Podcast Episode</h3>
+            <p id="podDesc">Add your Spotify/YouTube podcast link. People can listen from here.</p>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="embed">
+            <!-- Replace with Spotify embed if you want. For now, another YouTube embed -->
+            <iframe id="podEmbed" src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+            <div class="overlay"></div>
+            <div class="label">Podcast Player</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card col-12 reveal" id="supporters">
+        <div class="pad">
+          <div class="section-title">
+            <h2>Supporters & Members</h2>
+            <p>highlighted</p>
+          </div>
+
+          <div class="list" id="supportersList">
+            <!-- supporters load here -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="reveal">
+      © <span id="year"></span> Gaming JeNNa • Built with GitHub Pages
+    </footer>
+  </main>
+
+  <script>
+    // ====== EDIT THESE LINKS (IMPORTANT) ======
+    const LINKS = {
+      youtubeChannel: "https://youtube.com/",           // your channel link
+      buyMeACoffee: "https://buymeacoffee.com/",        // your BMAC link
+      latestVideoId: "VIDEO_ID",                        // example: dQw4w9WgXcQ
+      podcastVideoId: "VIDEO_ID",                       // if podcast is on YouTube
+      podcastOpenLink: "https://youtube.com/",          // Spotify/YouTube podcast page
+      podcastTitle: "What We Thought Podcast",
+      podcastDesc: "New episodes + gaming talks. Tap Open to listen."
+    };
+
+    // Demo posts (you can later move to JSON file)
+    const POSTS = [
+      {
+        tag: "Announcement",
+        title: "New upload is live 🎮",
+        text: "Check out the latest video on the channel. Drop your thoughts in comments!",
+        linkText: "Watch now",
+        link: LINKS.youtubeChannel
+      },
+      {
+        tag: "Special",
+        title: "Podcast Episode 1 is out 🎙️",
+        text: "Listen to the first episode and tell me what topic you want next.",
+        linkText: "Listen",
+        link: LINKS.podcastOpenLink
+      },
+      {
+        tag: "Community",
+        title: "Suggest a game for next stream",
+        text: "Comment your best suggestions (horror / action / story).",
+        linkText: "Go to YouTube",
+        link: LINKS.youtubeChannel
+      }
+    ];
+
+    const SUPPORTERS = [
+      { name: "VIP Supporter", role: "Gold", note: "Thank you for supporting the channel ❤️" },
+      { name: "Member", role: "Silver", note: "Community member highlight ✨" },
+      { name: "Supporter", role: "Bronze", note: "Love you all 🙌" }
+    ];
+
+    // ====== Apply links ======
+    document.getElementById("ytBtn").href = LINKS.youtubeChannel;
+    document.getElementById("bmacTop").href = LINKS.buyMeACoffee;
+
+    document.getElementById("ytEmbed").src = `https://www.youtube.com/embed/${LINKS.latestVideoId}`;
+    document.getElementById("podEmbed").src = `https://www.youtube.com/embed/${LINKS.podcastVideoId}`;
+
+    document.getElementById("podOpen").href = LINKS.podcastOpenLink;
+    document.getElementById("podTitle").textContent = LINKS.podcastTitle;
+    document.getElementById("podDesc").textContent = LINKS.podcastDesc;
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // ====== Render posts ======
+    const postsList = document.getElementById("postsList");
+    POSTS.forEach(p => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML = `
+        <div class="top">
+          <span class="tag">${p.tag}</span>
+          <a href="${p.link}" target="_blank" rel="noopener">${p.linkText}</a>
+        </div>
+        <h3>${p.title}</h3>
+        <p>${p.text}</p>
+      `;
+      postsList.appendChild(el);
+    });
+
+    // ====== Render supporters ======
+    const supList = document.getElementById("supportersList");
+    SUPPORTERS.forEach(s => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML = `
+        <div class="top">
+          <span class="tag">${s.role}</span>
+          <span class="tag">Highlighted</span>
+        </div>
+        <h3>${s.name}</h3>
+        <p>${s.note}</p>
+      `;
+      supList.appendChild(el);
+    });
+
+    // ====== Reveal on scroll animation ======
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e => {
+        if(e.isIntersecting) e.target.classList.add("show");
+      });
+    }, {threshold: 0.12});
+
+    document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
+
+    // Small dynamic text
+    const tips = ["New posts weekly", "Drop your suggestions", "Supporters get highlighted", "Podcast updates soon"];
+    let i = 0;
+    setInterval(()=>{
+      i = (i+1) % tips.length;
+      document.getElementById("updateText").textContent = tips[i];
+    }, 2200);
+  </script>
 </body>
 </html>
